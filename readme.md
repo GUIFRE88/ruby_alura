@@ -1,4 +1,4 @@
----
+
 <h4 align="center">
   🚀 Curso Ruby I: Introdução a lógica de programação com jogos
 </h4>
@@ -18,4 +18,4 @@ Pequeno curso de Ruby, abordando os principais conceitos da linguagem.
 
 - [ALURA](https://www.alura.com.br)
 
----
+
