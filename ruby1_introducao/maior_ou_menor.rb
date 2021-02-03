@@ -1,14 +1,14 @@
 def da_boas_vindas
   puts "Bem vindo ao jogo da adivinhação"
   puts "Qual é o seu nome?"
-  nome = gets # Pega o valor digitado pelo usuário
+  nome = gets.strip # Pega o valor digitado pelo usuário
   puts "\n\n\n\n\n\n\n" # Imprime quebra de linha
   puts "Começaremos o jogo para vc, #{nome}"
 end
 
 def sorteia_numero_secreto
   puts "Escolhendo um número secreto entre 0 e 200..."
-  sorteado = 175
+  sorteado = rand(200)
   puts "Escolhido... que tal adivinhar hoje nosso número secreto?"
   sorteado # Retorna o numero secreto
 end
@@ -41,6 +41,7 @@ end
 da_boas_vindas
 numero_secreto = sorteia_numero_secreto
 
+pontos_ate_agora = 1000
 limite_de_tentativas = 5 # Cria variáve de limite de tentativas para o FOR
 chutes = []
 
@@ -48,8 +49,13 @@ for tentativa in 1..limite_de_tentativas
   chute = pede_um_numero tentativa, limite_de_tentativas
   chutes << chute
 
+  # .abs - trás o valor absoluto do numero, se for negativo tiva o simbolo
+  pontos_a_perder = (chute - numero_secreto).abs / 2.0
+  pontos_ate_agora -= pontos_a_perder
+
   break if verifica_se_acertou numero_secreto, chute
 end
 
-## 04.Arrays, métodos e funções.
-### 07.Sétimo Video.
+puts "Você ganhou #{pontos_ate_agora} pontos."
+
+## 05. Case when, while, loop do
