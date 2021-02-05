@@ -4,13 +4,31 @@ def da_boas_vindas
   nome = gets.strip # Pega o valor digitado pelo usuário
   puts "\n\n\n\n\n\n\n" # Imprime quebra de linha
   puts "Começaremos o jogo para vc, #{nome}"
+  nome
 end
 
-def sorteia_numero_secreto
-  puts "Escolhendo um número secreto entre 0 e 200..."
-  sorteado = rand(200)
+def sorteia_numero_secreto(dificuldade)
+  case dificuldade
+  when 1
+    maximo = 30
+  when 2
+    maximo = 60
+  when 3
+    maximo 100
+  when 4
+    maximo = 150
+  when 5
+    maximo == 200
+  end
+  puts "Escolhendo um número secreto entre 1 e #{maximo}..."
+  sorteado = rand(maximo) + 1
   puts "Escolhido... que tal adivinhar hoje nosso número secreto?"
   sorteado # Retorna o numero secreto
+end
+
+def pede_dificuldade
+  puts "Qual o nível de dificuldade que deseja? 1 - fácil, 5 dificil."
+  dificuldade = gets.to_i
 end
 
 def pede_um_numero(tentativa, limite_de_tentativas)
@@ -38,24 +56,44 @@ def verifica_se_acertou(numero_secreto, chute)
   false # Retorna false
 end
 
-da_boas_vindas
-numero_secreto = sorteia_numero_secreto
+def joga(nome, dificuldade)
+  numero_secreto = sorteia_numero_secreto(dificuldade)
 
-pontos_ate_agora = 1000
-limite_de_tentativas = 5 # Cria variáve de limite de tentativas para o FOR
-chutes = []
+  pontos_ate_agora = 1000
+  limite_de_tentativas = 5 # Cria variáve de limite de tentativas para o FOR
+  chutes = []
 
-for tentativa in 1..limite_de_tentativas
-  chute = pede_um_numero tentativa, limite_de_tentativas
-  chutes << chute
+  for tentativa in 1..limite_de_tentativas
+    chute = pede_um_numero tentativa, limite_de_tentativas
+    chutes << chute
 
-  # .abs - trás o valor absoluto do numero, se for negativo tiva o simbolo
-  pontos_a_perder = (chute - numero_secreto).abs / 2.0
-  pontos_ate_agora -= pontos_a_perder
+    if nome == "Guilherme"
+      puts "Acertou!"
+      break
+    end
 
-  break if verifica_se_acertou numero_secreto, chute
+    # .abs - trás o valor absoluto do numero, se for negativo tiva o simbolo
+    pontos_a_perder = (chute - numero_secreto).abs / 2.0
+    pontos_ate_agora -= pontos_a_perder
+
+    break if verifica_se_acertou numero_secreto, chute
+  end
+
+  puts "Você ganhou #{pontos_ate_agora} pontos."
 end
 
-puts "Você ganhou #{pontos_ate_agora} pontos."
+def nao_quer_jogar
+  puts "Deseja jogar novamente? S/N"
+  nao_quero_jogar = gets.strip
+  nao_quero_jogar.upcase == "N"
+end
 
-## 05. Case when, while, loop do
+nome = da_boas_vindas
+dificuldade = pede_dificuldade
+
+loop do
+  joga nome, dificuldade
+  if nao_quer_jogar
+    break
+  end
+end
