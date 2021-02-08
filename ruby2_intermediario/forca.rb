@@ -1,33 +1,17 @@
-def da_boas_vindas
-  puts "Bem vindo ao jogo da forca"
-  puts "Qual é o seu nome?"
-  nome = gets.strip
-  puts "\n\n\n\n\n"
-  puts "Começaremos o jogo para você, #{nome}"
-  nome
-end
+require_relative "ui"
 
-def escolhe_palavra_secreta
-  puts "Escolhendo uma palavra secreta..."
-  palavra_secreta = "programador"
-  puts "Palavra secreta com #{palavra_secreta.size} letras... boa sorte!"
-  palavra_secreta
-end
+def pede_um_chute_valido(chutes, erros)
+  cabecalho_de_tentativa chutes, erros
+  loop do 
+    chute = pede_um_chute chutes, erros
+    chutes << chute
 
-def nao_quer_jogar
-  puts "Deseja novamente? S/N"
-  quero_jogar = gets.strip
-  nao_quero_jogar = quero_jogar.upcase == "N"
-end
-
-def pede_um_chute(chutes, erros)
-  puts "n\n\n\n\n"
-  puts "Erros até agora: #{erros}"
-  puts "Chutes até agora: #{chutes}"
-  puts "Entre com uma letra ou uma palavra"
-  chute = gets.strip
-  puts "Será que acertou ? Você chutou #{chute}"
-  chute
+    if chutes.include? chute
+      avisa_chute_efetuado chute
+    else
+      return chute
+    end
+  end
 end
 
 def joga(nome)
@@ -38,48 +22,40 @@ def joga(nome)
   pontos_ate_agora = 0
 
   while erros < 5
-    chute = pede_um_chute chutes, erros
-    chutes << chute
+    pede_um_chute_valido chutes, erros
     chutou_uma_letra = chute.size == 1
     if chutou_uma_letra
       letra_procurada = chute[0]
       total_encontrado = palavra_secreta.count letra_procurada
       if total_encontrado == 0
-        puts "Letra não encontrada."
+        avisa_letra_nao_encontrada
         erros += 1
       else
-        puts "Letra encontrada #{total_encontrado} vezes"
+        avisa_letra_encontrada total_encontrado
       end
     else
       acertou = chute == palavra_secreta
       if acertou
-        puts "Parabéns! Acertou"
+        avisa_acertou
         pontos_ate_agora += 100
         break
       else
-        puts "Que pena... errou"
+        avisa_errou
         pontos_ate_agora -= 30
         erros += 1
       end
     end
   end
-
-  puts "Você ganhou #{pontos_ate_agora} pontos."
+  avisa_pontos pontos_ate_agora
 end
 
+def jogo_da_forca
+  nome = da_boas_vindas
 
-nome = da_boas_vindas
-
-
-loop do
-  joga nome
-  if nao_quer_jogar
-    break
+  loop do
+    joga nome
+    if nao_quer_jogar
+      break
+    end
   end
 end
-
-
-# Continuar em 
-
-#01. Começando o jogo de boas práticas
-#     06.Erros
