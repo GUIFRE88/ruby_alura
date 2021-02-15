@@ -1,46 +1,45 @@
 require_relative 'ui'
 
-def posicoes_validas_a_partir_de(mapa, posicao)
+def posicoes_validas_a_partir_de(mapa, novo_mapa, posicao)
   posicoes = []
-  baixo = [posicao[0]+1, posicao[1]]
-  if posicao_valida? mapa, baixo
-    posicoes << baixo
-  end
-  cima = [posicao[0]-1, posicao[1]]
-  if posicao_valida? mapa, cima
-    posicoes << cima
-  end
-  direita = [posicao[0], posicao[1]+1]
-  if posicao_valida? mapa, direita
-    posicoes << direita
-  end
-  esquerda = [posicao[0], posicao[1]-1]
-  if posicao_valida? mapa, esquerda
-    posicoes << esquerda
+  movimentos = [[+1, 0], [0, +1], [-1, 0], [0, -1]]
+  movimentos.each do |movimento|
+    nova_posicao [ posicao[0] + movimento[0], posicao[1] + movimento[1]]
+    if posicao_valida?(mapa, nova_posicao) && posicao_valida?(novo_mapa, nova_posicao)
+      posicoes << nova_posicao
+    end
   end
   posicoes
 end
 
-def move_fantasma(mapa, linha, coluna)
-  posicoes = posicoes_validas_a_partir_de mapa, [linha,coluna]
+def move_fantasma(mapa, novo_mapa, linha, coluna)
+  posicoes = posicoes_validas_a_partir_de mapa, novo_mapa, [linha,coluna]
   return if posicoes.empty?
 
   posicao = posicoes[0]
   mapa[linha][coluna] = " "
-  mapa[posicao[0]][posicao[1]] = "F"
+  novo_mapa[posicao[0]][posicao[1]] = "F"
 
+end
+
+def copia_mapa(mapa)
+  # Transforma o array em uma string unica, usando a quebra de linha em cada
+  # letra, após isso retira o "F" e  coloca " " e transforma em array novamente.
+  novo_mapa = mapa.join("\n").tr("F", " ").split "\n"
 end
 
 def move_fantasmas(mapa)
   caractere_do_fantasma = "F"
+  novo_mapa = copia_mapa mapa
   mapa.each_with_index do |linha_atual, linha|
     linha_atual.chars.each_with_index do |caracter_atual, coluna|
       eh_fantasma = caracter_atual == caractere_do_fantasma
       if eh_fantasma
-        move_fantasma mapa, linha, coluna
+        move_fantasma mapa, novo_mapa, linha, coluna
       end
     end
   end
+  novo_mapa
 end
 
 def calcula_nova_posicao(heroi, direcao)
@@ -102,7 +101,7 @@ def joga(nome)
     mapa[heroi[0]][heroi[1]] = " "
     mapa[nova_posicao[0]][nova_posicao[1]] = "H"
 
-    move_fantasmas mapa
+    mapa = move_fantasmas mapa
   end
 end
 

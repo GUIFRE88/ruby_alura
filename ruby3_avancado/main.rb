@@ -5,5 +5,5 @@ inicia_fogefoge
 
 # Continuar na aula
 # Ruby III : Mais Lógica de programação em um novo jogo
-# 01. Os cuidados com arrays usando boas praticas
-#   03 Cópias
+# 03. Os cuidados com arrays usando boas praticas
+#   05 - Armazenamento 2:30
