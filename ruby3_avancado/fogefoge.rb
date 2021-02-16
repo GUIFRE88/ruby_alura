@@ -1,10 +1,14 @@
 require_relative 'ui'
 
+def soma_vetor(vetor1, vetor2)
+  [vetor1[0] + vetor2[0], vetor1[1] + vetor2[1]]
+end
+
 def posicoes_validas_a_partir_de(mapa, novo_mapa, posicao)
   posicoes = []
   movimentos = [[+1, 0], [0, +1], [-1, 0], [0, -1]]
   movimentos.each do |movimento|
-    nova_posicao [ posicao[0] + movimento[0], posicao[1] + movimento[1]]
+    nova_posicao = soma_vetor(movimento, posicao)
     if posicao_valida?(mapa, nova_posicao) && posicao_valida?(novo_mapa, nova_posicao)
       posicoes << nova_posicao
     end
@@ -16,7 +20,8 @@ def move_fantasma(mapa, novo_mapa, linha, coluna)
   posicoes = posicoes_validas_a_partir_de mapa, novo_mapa, [linha,coluna]
   return if posicoes.empty?
 
-  posicao = posicoes[0]
+  aleatoria = rand posicoes.size
+  posicao = posicoes[aleatoria]
   mapa[linha][coluna] = " "
   novo_mapa[posicao[0]][posicao[1]] = "F"
 
@@ -85,6 +90,11 @@ def encontra_jogador(mapa)
       return [linha, coluna_do_heroi]
     end
   end
+  nil
+end
+
+def jogador_perdeu?(mapa)
+  perdeu = !encontra_jogador(mapa)
 end
 
 def joga(nome)
@@ -102,6 +112,10 @@ def joga(nome)
     mapa[nova_posicao[0]][nova_posicao[1]] = "H"
 
     mapa = move_fantasmas mapa
+    if jogador_perdeu? mapa
+      game_over
+      break
+    end
   end
 end
 
